@@ -1,10 +1,5 @@
 # CommCDSR (anonymous artifact)
 
-Method-only release for the paper "CommCDSR: ...". Contains the three modules:
-community perception (`cdsr/features/comm_cdsr_best.py`), community-gated
-backbone (`cdsr/models/comm_cdsr_best.py`), selective LLM rerank
-(`cdsr/models/community_rerank.py`).
-
 ## Setup
 - Python 3.10+, PyTorch, scikit-learn; `pip install -r requirements-free.txt` is not needed beyond torch/pyaml/requests.
 - LLM access (community profiles + rerank): export `LLM4CDSR_API_KEY=<key>`
