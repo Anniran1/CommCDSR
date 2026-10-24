@@ -1,0 +1,50 @@
+experiment:
+  name: unified_cdsr
+  seeds: [2022, 3407, 42, 5, 2025]
+  reproducible: true
+
+paths:
+  output_dir: ${paths.project_root}/outputs/${dataset.name}/${model.name}
+  canonical_dir: ${paths.project_root}/artifacts/${dataset.name}/canonical_all_users
+  protocol_dir: ${paths.project_root}/artifacts/${dataset.name}/protocol_sampled_999_all_users_native_views
+  adapter_dir: ${paths.project_root}/artifacts/${dataset.name}/adapters_all_users_native_views
+  checkpoint_dir: ${paths.output_dir}/checkpoints
+
+data:
+  split_strategy: per-domain-leave-two-out
+  user_scope: all
+  max_sequence_length: 50
+  min_history: 1
+  min_domain_interactions: 3
+
+protocol:
+  candidate_mode: sampled
+  num_negatives: 999
+  require_exact_num_negatives: true
+  filter_history: true
+  seed: 2022
+  target_domain_only: true
+  shared_candidate_file: true
+
+evaluation:
+  metric_implementation: cdsr
+  metrics: [hit, recall, ndcg, mrr]
+  topk: [5, 10, 20]
+  valid_metric: ndcg@10
+  eval_batch_size: 4096
+  report_by_domain: true
+  report_by_overlap_group: true
+  # Persist test-time user-level outcomes for paired negative-transfer analysis.
+  record_per_user_accuracy: true
+  per_user_splits: [test]
+
+training:
+  optimizer: adam
+  batch_size: 256
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0
+  patience: 10
+  grad_clip_norm: null
+  num_workers: 0
+  device: cuda:0
